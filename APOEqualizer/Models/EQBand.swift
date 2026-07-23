@@ -32,19 +32,14 @@ enum EQFilterType: String, Codable, CaseIterable, Identifiable {
     }
 }
 
-/// One band of the graphic/parametric EQ. Backed 1:1 by an
-/// `AVAudioUnitEQFilterParameters` entry in the live `AVAudioUnitEQ` node.
 struct EQBand: Identifiable, Codable, Hashable {
     var id: Int
     var frequency: Float
-    var gain: Float = 0          // dB, -24...24
-    var bandwidth: Float = 1.0   // octaves
+    var gain: Float = 0
+    var bandwidth: Float = 1.0
     var filterType: EQFilterType = .parametric
     var bypass: Bool = false
 
-    /// Standard 10-band ISO graphic EQ layout: shelves on the ends, bell
-    /// filters in between -- the layout used by virtually every hardware
-    /// and software graphic EQ.
     static func defaultTenBand() -> [EQBand] {
         let frequencies: [Float] = [31, 62, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
         return frequencies.enumerated().map { index, freq in

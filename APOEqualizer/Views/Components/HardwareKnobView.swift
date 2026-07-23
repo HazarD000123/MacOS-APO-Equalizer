@@ -1,9 +1,5 @@
 import SwiftUI
 
-/// A skeuomorphic hardware-style rotary knob -- tick-mark scale, metal
-/// finish, LED-style value readout -- for the plugin panels, which are
-/// styled like standalone hardware units rather than native macOS controls.
-/// Drag vertically to change the value; double-click resets to the default.
 struct HardwareKnobView: View {
     @Binding var value: Float
     let range: ClosedRange<Float>

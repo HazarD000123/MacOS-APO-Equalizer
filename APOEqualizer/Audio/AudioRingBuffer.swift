@@ -1,11 +1,5 @@
 import Foundation
 
-/// Realtime-safe single-producer/single-consumer ring buffer of planar
-/// Float32 audio, bridging the capture and playback engines.
-///
-/// Both sides run on separate Core Audio realtime threads, so nothing here
-/// allocates or locks: reads and writes are index arithmetic over
-/// pre-allocated storage, which is safe for one writer and one reader.
 final class AudioRingBuffer: @unchecked Sendable {
     let channelCount: Int
     private let capacityFrames: Int
@@ -13,10 +7,6 @@ final class AudioRingBuffer: @unchecked Sendable {
     private var writeIndex: Int = 0
     private var readIndex: Int = 0
 
-    /// - Parameters:
-    ///   - channelCount: number of audio channels (e.g. 2 for stereo)
-    ///   - capacityFrames: ring size in frames; should comfortably exceed the
-    ///     largest expected producer/consumer callback size (default ~0.5s at 48kHz)
     init(channelCount: Int, capacityFrames: Int = 24000) {
         self.channelCount = channelCount
         self.capacityFrames = capacityFrames
@@ -33,8 +23,6 @@ final class AudioRingBuffer: @unchecked Sendable {
         }
     }
 
-    /// Frames currently available to read. Approximate under concurrent
-    /// access (as expected for SPSC), always safe to use as a bound.
     var framesAvailable: Int {
         let w = writeIndex, r = readIndex
         return w >= r ? (w - r) : (capacityFrames - r + w)
@@ -52,16 +40,12 @@ final class AudioRingBuffer: @unchecked Sendable {
         }
     }
 
-    /// Writes as many frames as fit; drops the oldest data instead of
-    /// blocking if the producer is running faster than the consumer.
     @discardableResult
     func write(from channels: [UnsafePointer<Float>], frameCount: Int) -> Int {
         guard channels.count == channelCount, frameCount > 0 else { return 0 }
 
         var toWrite = frameCount
         if toWrite > framesFree {
-            // Overrun: advance the read pointer to make room, dropping the
-            // oldest samples rather than growing unbounded latency.
             let overflow = toWrite - framesFree
             readIndex = (readIndex + overflow) % capacityFrames
         }
@@ -83,8 +67,6 @@ final class AudioRingBuffer: @unchecked Sendable {
         return toWrite
     }
 
-    /// Reads as many frames as are available into `channels`, zero-filling
-    /// any shortfall so an underrun produces silence instead of garbage/clicks.
     @discardableResult
     func read(into channels: [UnsafeMutablePointer<Float>], frameCount: Int) -> Int {
         guard channels.count == channelCount, frameCount > 0 else { return 0 }

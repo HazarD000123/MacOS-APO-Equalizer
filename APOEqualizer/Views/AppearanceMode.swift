@@ -1,9 +1,5 @@
 import SwiftUI
 
-/// User-selectable app appearance, independent of (or matching) the system
-/// setting. Persisted via the same `@AppStorage` key everywhere it's read
-/// or written, so the app root and the picker control stay in sync without
-/// needing a shared observable object for one value.
 enum AppearanceMode: String, CaseIterable, Identifiable {
     case system, light, dark
 
@@ -34,9 +30,6 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
     }
 }
 
-/// A compact segmented control for switching appearance, meant for the
-/// sidebar. Reads/writes the same `appearanceMode` key the app root uses to
-/// drive `.preferredColorScheme`.
 struct AppearancePickerView: View {
     @AppStorage("appearanceMode") private var appearanceModeRaw: String = AppearanceMode.system.rawValue
 

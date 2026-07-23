@@ -1,9 +1,5 @@
 import Foundation
 
-// Small, allocation-free DSP building blocks shared by the effect plugins.
-// Everything here is safe to call from a realtime audio render thread:
-// no allocations, no locks, no Swift runtime surprises.
-
 @inline(__always) func dBToLinear(_ dB: Float) -> Float {
     pow(10.0, dB / 20.0)
 }
@@ -16,13 +12,10 @@ import Foundation
     min(max(value, lo), hi)
 }
 
-/// Soft clipper (tanh-based) used as a safety limiter after gain stages that
-/// can push a signal past 0dBFS (e.g. the preamp when boosting).
 @inline(__always) func softClip(_ x: Float) -> Float {
     tanh(x)
 }
 
-/// A single biquad (Direct Form I) section.
 struct Biquad {
     var b0: Float = 1, b1: Float = 0, b2: Float = 0
     var a1: Float = 0, a2: Float = 0
@@ -33,8 +26,6 @@ struct Biquad {
         x1 = 0; x2 = 0; y1 = 0; y2 = 0
     }
 
-    /// Swaps in new coefficients while keeping the filter history, so a knob
-    /// move doesn't zero the state and click.
     mutating func updateCoefficients(from other: Biquad) {
         b0 = other.b0; b1 = other.b1; b2 = other.b2
         a1 = other.a1; a2 = other.a2
@@ -47,7 +38,6 @@ struct Biquad {
         return y
     }
 
-    /// Low-pass.
     static func lowPass(sampleRate: Double, frequency: Float, q: Float = 0.707) -> Biquad {
         let w0 = 2.0 * Double.pi * Double(frequency) / sampleRate
         let alpha = sin(w0) / (2.0 * Double(q))
@@ -62,7 +52,6 @@ struct Biquad {
         return f
     }
 
-    /// High-pass, used to keep the bass centered in the stereo imager.
     static func highPass(sampleRate: Double, frequency: Float, q: Float = 0.707) -> Biquad {
         let w0 = 2.0 * Double.pi * Double(frequency) / sampleRate
         let alpha = sin(w0) / (2.0 * Double(q))
@@ -77,9 +66,6 @@ struct Biquad {
         return f
     }
 
-    /// All-pass: unity gain everywhere, shifts phase near `frequency`. Used to
-    /// build stereo decorrelation from a mono source, which plain Mid/Side
-    /// width can't do since scaling a zero side signal stays zero.
     static func allPass(sampleRate: Double, frequency: Float, q: Float = 0.7) -> Biquad {
         let w0 = 2.0 * Double.pi * Double(frequency) / sampleRate
         let alpha = sin(w0) / (2.0 * Double(q))
@@ -94,8 +80,6 @@ struct Biquad {
         return f
     }
 
-    /// Low shelf with a gentle, musical slope (S=1) -- the "Low" band of a
-    /// Baxandall-style tone control.
     static func lowShelf(sampleRate: Double, frequency: Float, gainDB: Float, q: Float = 0.707) -> Biquad {
         let a = pow(10.0, Double(gainDB) / 40.0)
         let w0 = 2.0 * Double.pi * Double(frequency) / sampleRate
@@ -116,7 +100,6 @@ struct Biquad {
         return f
     }
 
-    /// High shelf, the "High" band of a Baxandall-style tone control.
     static func highShelf(sampleRate: Double, frequency: Float, gainDB: Float, q: Float = 0.707) -> Biquad {
         let a = pow(10.0, Double(gainDB) / 40.0)
         let w0 = 2.0 * Double.pi * Double(frequency) / sampleRate
@@ -137,8 +120,6 @@ struct Biquad {
         return f
     }
 
-    /// Peaking/bell filter -- the "Mid" band of a Baxandall-style tone
-    /// control, and the sidechain shaping option for the compressor family.
     static func peaking(sampleRate: Double, frequency: Float, gainDB: Float, q: Float = 0.8) -> Biquad {
         let a = pow(10.0, Double(gainDB) / 40.0)
         let w0 = 2.0 * Double.pi * Double(frequency) / sampleRate
@@ -159,8 +140,6 @@ struct Biquad {
     }
 }
 
-/// Single-channel circular delay line for the Haas widener. Integer-sample
-/// resolution is fine for the 0-40ms range it works in.
 final class DelayLine {
     private var buffer: [Float]
     private var writeIndex: Int = 0
@@ -188,8 +167,6 @@ final class DelayLine {
     }
 }
 
-/// Peak envelope follower with independent attack/release times, the core
-/// of the punch compressor's gain-reduction detector.
 struct EnvelopeFollower {
     var attackCoeff: Float = 0
     var releaseCoeff: Float = 0

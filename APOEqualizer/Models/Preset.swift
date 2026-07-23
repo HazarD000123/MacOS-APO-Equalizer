@@ -20,8 +20,6 @@ struct Preset: Identifiable, Codable, Hashable {
     }
 }
 
-/// Reads/writes presets as JSON files under Application Support. No
-/// database needed -- there will only ever be a handful of these.
 final class PresetStore {
     static let shared = PresetStore()
 

@@ -16,7 +16,6 @@ private func fmtPan(_ pan: Float) -> String {
     return String(format: "%.1fms %@", abs(pan), pan > 0 ? "R" : "L")
 }
 
-/// Dispatches to each plugin's own hardware-style panel.
 struct PluginPanelView: View {
     @EnvironmentObject var engine: AudioEngineManager
     let slot: PluginSlot
@@ -31,8 +30,6 @@ struct PluginPanelView: View {
         }
     }
 }
-
-// MARK: - Maximizer
 
 struct MaximizerPanel: View {
     @EnvironmentObject var engine: AudioEngineManager
@@ -57,7 +54,6 @@ struct MaximizerPanel: View {
     }
 }
 
-/// Scope showing how flat-topped the wave gets as Drive and Loudness rise.
 private struct ClipMeterGraphic: View {
     let drive: Float
     let loudness: Float
@@ -68,17 +64,16 @@ private struct ClipMeterGraphic: View {
             let w = proxy.size.width
             let h = proxy.size.height
             let midY = h / 2
-            // How hard we're clipping: drive in dB (0-48) plus loudness push.
             let hardness = min(1, drive / 24 + loudness / 200)
             let amp = (midY - 4)
-            let flatTop = amp * CGFloat(hardness) // how much of the peak is chopped flat
+            let flatTop = amp * CGFloat(hardness)
 
             Path { path in
                 let steps = 48
                 for s in 0...steps {
                     let x = w * CGFloat(s) / CGFloat(steps)
                     let phase = Double(s) / Double(steps) * 2 * .pi
-                    var v = CGFloat(sin(phase)) * amp * 1.6 // overdriven sine
+                    var v = CGFloat(sin(phase)) * amp * 1.6
                     if v > amp - flatTop { v = amp - flatTop }
                     if v < -(amp - flatTop) { v = -(amp - flatTop) }
                     let y = midY - v
@@ -88,7 +83,6 @@ private struct ClipMeterGraphic: View {
             }
             .stroke(tint, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
 
-            // The 0 dBFS rails.
             ForEach([midY - amp, midY + amp], id: \.self) { railY in
                 Path { p in
                     p.move(to: CGPoint(x: 0, y: railY))
@@ -103,8 +97,6 @@ private struct ClipMeterGraphic: View {
         .background(RoundedRectangle(cornerRadius: 6).fill(Color.black.opacity(0.35)))
     }
 }
-
-// MARK: - Tone Shaper
 
 struct ToneShaperPanel: View {
     @EnvironmentObject var engine: AudioEngineManager
@@ -131,9 +123,6 @@ struct ToneShaperPanel: View {
     }
 }
 
-/// A simple three-point tilt curve (low/mid/high) sketching the resulting
-/// tone response, the same idea a hardware tone-control faceplate implies
-/// with its three knobs in a row.
 private struct TiltCurveGraphic: View {
     let low: Float
     let mid: Float
@@ -170,8 +159,6 @@ private struct TiltCurveGraphic: View {
     }
 }
 
-// MARK: - Haas Widener
-
 struct HaasWidenerPanel: View {
     @EnvironmentObject var engine: AudioEngineManager
     let slot: PluginSlot
@@ -204,8 +191,6 @@ struct HaasWidenerPanel: View {
     }
 }
 
-/// L/R reference dots with a moving marker showing the perceived source
-/// position as Delay Pan sweeps from left to right.
 private struct HaasDiagram: View {
     let pan: Float
     let tint: Color
@@ -236,8 +221,6 @@ private struct HaasDiagram: View {
     }
 }
 
-// MARK: - Stereo Imager
-
 struct StereoImagerPanel: View {
     @EnvironmentObject var engine: AudioEngineManager
     let slot: PluginSlot
@@ -263,7 +246,6 @@ struct StereoImagerPanel: View {
     }
 }
 
-/// Lines fanning out from center, spreading wider as Width increases.
 private struct BowtieGraphic: View {
     let width: Float
     let tint: Color
@@ -304,8 +286,6 @@ private struct BowtieGraphic: View {
     }
 }
 
-// MARK: - Punch Compressor
-
 struct PunchCompressorPanel: View {
     @EnvironmentObject var engine: AudioEngineManager
     let slot: PluginSlot
@@ -333,9 +313,6 @@ struct PunchCompressorPanel: View {
     }
 }
 
-/// The classic compressor transfer curve: unity below the threshold, bent
-/// to 1/ratio above it. Threshold/ratio here are derived from the single
-/// Process knob (see `PunchCompressorMapping`), not set directly.
 private struct CompressionCurveGraphic: View {
     let thresholdDB: Float
     let ratio: Float

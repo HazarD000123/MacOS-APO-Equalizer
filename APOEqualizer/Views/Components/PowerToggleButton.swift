@@ -1,8 +1,5 @@
 import SwiftUI
 
-/// A circular power-icon toggle, styled after Equalizer APO's per-stage
-/// enable buttons -- lit up (accent-colored) when the stage is active, dim
-/// when it's bypassed.
 struct PowerToggleButton: View {
     @Binding var isOn: Bool
     var tint: Color = .accentColor

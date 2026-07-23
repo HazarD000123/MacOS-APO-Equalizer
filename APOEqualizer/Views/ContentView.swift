@@ -106,8 +106,6 @@ struct PowerControlView: View {
         }
     }
 
-    /// Simple heuristic so failure messages actually stand out instead of
-    /// reading the same as routine status text -- easy to miss otherwise.
     private var isWarning: Bool {
         guard engine.isVirtualDeviceInstalled else { return true }
         let msg = engine.statusMessage.lowercased()

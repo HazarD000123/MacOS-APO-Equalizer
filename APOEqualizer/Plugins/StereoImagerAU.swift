@@ -1,26 +1,12 @@
 import AVFoundation
 import AudioToolbox
 
-/// Stereo Imager -- inspired by Wider. Real Wider doesn't just scale the
-/// existing Mid/Side difference (that approach can't do anything to a
-/// signal that's already mono -- scaling a zero side signal is still zero,
-/// which is exactly the case for this app's mic-input pipeline). Instead it
-/// runs an all-pass/comb filter network to *generate* new phase-decorrelated
-/// content and blends it in, so it can widen a genuinely mono source, while
-/// staying exactly mono-compatible: L=mid+side, R=mid-side always sums back
-/// to 2*mid regardless of what `side` contains, by construction.
-///
-/// Two contributions are blended into `side`:
-///  - the input's existing Mid/Side difference, scaled by width
-///  - a decorrelated signal built by cascading Mid through staggered all-pass
-///    filters (unity gain, phase only), faded in above 100% width so a mono
-///    source still gets width
 final class StereoImagerKernel: EffectKernel {
     var bypassed = false
     var sampleRate: Double = 48000 { didSet { rebuildFilters() } }
 
-    var width: Float = 130              // 0-200 %, 100 = neutral
-    var bassMonoFreq: Float = 120 { didSet { rebuildFilters() } }  // Hz, 0 disables
+    var width: Float = 130
+    var bassMonoFreq: Float = 120 { didSet { rebuildFilters() } }
     var outputGainDB: Float = 0
 
     private var sideHighPass = Biquad()
@@ -41,8 +27,8 @@ final class StereoImagerKernel: EffectKernel {
     func process(buffers: [UnsafeMutablePointer<Float>], frameCount: Int) {
         guard buffers.count == 2 else { return }
         let l = buffers[0], r = buffers[1]
-        let widthFactor = width / 100                 // 0...2
-        let extraWidth = max(0, widthFactor - 1)       // 0...1, only kicks in above 100%
+        let widthFactor = width / 100
+        let extraWidth = max(0, widthFactor - 1)
         let monoizeBass = bassMonoFreq > 15
         let outGain = dBToLinear(outputGainDB)
 

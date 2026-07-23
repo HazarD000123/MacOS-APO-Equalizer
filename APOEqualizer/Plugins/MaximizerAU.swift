@@ -1,23 +1,12 @@
 import AVFoundation
 import AudioToolbox
 
-/// Loudness maximizer. Unlike the Preamp, whose soft limiter keeps a boost
-/// clean, this one distorts on purpose: upward expansion lifts the quiet parts,
-/// drive pushes the level up, and the signal hard clips at 0 dBFS. The
-/// flat-topped clipping is what reads as louder even though the peak can't go
-/// past full scale.
-///
-/// Chain: expansion -> drive -> hard clip -> output trim.
 final class MaximizerKernel: EffectKernel {
     var bypassed = false
     var sampleRate: Double = 48000
 
-    /// Input gain in dB pushed into the clip. Higher is louder and dirtier.
     var driveDB: Float = 12 { didSet { driveLinear = dBToLinear(driveDB) } }
-    /// Expansion amount, 0-100%, mapped to the power-curve exponent
-    /// (0% = 1.0, off; 100% = 0.5, strongest lift).
     var loudness: Float = 0 { didSet { expGain = 1 - clamp(loudness / 100, 0, 1) * 0.5 } }
-    /// Post-clip trim in dB, never above 0. Tames the level without losing density.
     var outputDB: Float = 0 { didSet { outputLinear = dBToLinear(outputDB) } }
 
     private var driveLinear: Float = dBToLinear(12)
@@ -36,8 +25,6 @@ final class MaximizerKernel: EffectKernel {
             for i in 0..<frameCount {
                 var x = ch[i]
 
-                // Expansion is sign-preserving: x^exp with exp < 1 lifts quiet
-                // samples much more than loud ones, so the average rises.
                 if expand {
                     x = x >= 0 ? powf(x, exp) : -powf(-x, exp)
                 }

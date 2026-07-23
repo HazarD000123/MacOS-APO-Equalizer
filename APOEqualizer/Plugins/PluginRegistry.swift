@@ -1,11 +1,6 @@
 import AVFoundation
 import AudioToolbox
 
-/// The catalog of built-in effect plugins. Each one is a small, self
-/// contained Audio Unit registered in-process (no extension bundle needed)
-/// via `AUAudioUnit.registerSubclass`, then instantiated into the engine's
-/// signal chain like any other AVAudioUnit node -- this is the same
-/// mechanism a "real" third-party plugin uses, just shipped inside the app.
 enum PluginKind: String, CaseIterable, Identifiable, Codable {
     case toneShaper
     case haasWidener
@@ -79,7 +74,6 @@ enum PluginRegistry {
     static let manufacturerCode = fourCC("Aeqz")
     private static var didRegister = false
 
-    /// Must be called once before any plugin is instantiated (done at app launch).
     static func registerAll() {
         guard !didRegister else { return }
         didRegister = true

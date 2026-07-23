@@ -1,8 +1,5 @@
 import SwiftUI
 
-/// A draggable vertical fader, used for the graphic EQ bands. SwiftUI's
-/// built-in Slider is horizontal-only on macOS, and a rotated Slider looks
-/// and behaves worse than a purpose-built fader for this layout.
 struct VerticalSlider: View {
     @Binding var value: Float
     let range: ClosedRange<Float>

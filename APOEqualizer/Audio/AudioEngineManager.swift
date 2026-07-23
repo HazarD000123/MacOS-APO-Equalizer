@@ -21,18 +21,6 @@ enum EngineError: LocalizedError {
     }
 }
 
-/// Owns the real-time audio pipeline.
-///
-/// Microphone -> captureEngine writes into a ring buffer -> playbackEngine
-/// reads it through Preamp -> EQ -> plugin rack -> BlackHole. Any app that
-/// selects "BlackHole 2ch" as its input then receives the processed audio.
-///
-/// Two `AVAudioEngine`s are needed because a single engine's input and output
-/// nodes share one I/O AudioUnit on macOS and can't target different devices.
-/// The ring buffer bridges them.
-///
-/// Each engine targets its device via `kAudioOutputUnitProperty_CurrentDevice`,
-/// so the system-wide default is never modified.
 @MainActor
 final class AudioEngineManager: ObservableObject {
     @Published private(set) var isRunning = false
@@ -59,9 +47,6 @@ final class AudioEngineManager: ObservableObject {
     private var pluginUnits: [UUID: AVAudioUnit] = [:]
     private var workingFormat: AVAudioFormat?
 
-    /// Optional third engine that plays a copy of the processed signal to a
-    /// real output, so you can hear it. BlackHole itself stays silent until
-    /// another app picks it up as an input.
     private let monitorEngine = AVAudioEngine()
     private var monitorRingBuffer: AudioRingBuffer?
     private var monitorSourceNode: AVAudioSourceNode?
@@ -70,8 +55,6 @@ final class AudioEngineManager: ObservableObject {
         PluginRegistry.registerAll()
         refreshDevices()
     }
-
-    // MARK: - Devices
 
     func refreshDevices() {
         availableInputDevices = AudioDeviceManager.inputDevices()
@@ -110,8 +93,6 @@ final class AudioEngineManager: ObservableObject {
         }
     }
 
-    // MARK: - Lifecycle
-
     func toggleRunning() async {
         if isRunning {
             stop()
@@ -120,9 +101,6 @@ final class AudioEngineManager: ObservableObject {
         }
     }
 
-    /// Requests microphone permission up front. Core Audio won't reliably
-    /// error out without it -- an unpermitted capture just delivers silence,
-    /// which looks identical to the app running and doing nothing.
     private func ensureMicrophonePermission() async -> Bool {
         switch AVCaptureDevice.authorizationStatus(for: .audio) {
         case .authorized:
@@ -219,9 +197,6 @@ final class AudioEngineManager: ObservableObject {
         statusMessage = "Stopped"
     }
 
-    /// Sets an I/O node's device and reads it back to confirm it took.
-    /// Bluetooth outputs in particular can accept the write without actually
-    /// switching, so this retries a few times to let profile negotiation settle.
     private func setIONodeDevice(_ audioUnit: AudioUnit, to deviceID: AudioDeviceID, attempts: Int = 4) throws {
         var lastStatus: OSStatus = noErr
         for attempt in 0..<attempts {
@@ -241,8 +216,6 @@ final class AudioEngineManager: ObservableObject {
         throw EngineError.deviceSetFailed(lastStatus)
     }
 
-    // MARK: - Capture engine (real microphone -> ring buffer)
-
     private func configureCapture(device: AudioDeviceInfo, format: AVAudioFormat) throws {
         captureEngine.stop()
         let input = captureEngine.inputNode
@@ -259,16 +232,12 @@ final class AudioEngineManager: ObservableObject {
             let frameCount = Int(pcmBuffer.frameLength)
             let channelCount = Int(pcmBuffer.format.channelCount)
             guard channelCount > 0, frameCount > 0 else { return }
-            // Built-in mics are usually mono, so duplicate the single channel
-            // into both sides rather than dropping the buffer.
             let left = channelData[0]
             let right = channelCount >= 2 ? channelData[1] : channelData[0]
             let pointers: [UnsafePointer<Float>] = [UnsafePointer(left), UnsafePointer(right)]
             buffer.write(from: pointers, frameCount: frameCount)
         }
     }
-
-    // MARK: - Playback engine (ring buffer -> preamp -> EQ -> plugins -> BlackHole)
 
     private func configurePlayback(device: AudioDeviceInfo, format: AVAudioFormat) async throws {
         playbackEngine.stop()
@@ -314,13 +283,6 @@ final class AudioEngineManager: ObservableObject {
         installLevelTap()
     }
 
-    /// Disconnects and reconnects the whole playback chain -- used whenever
-    /// a plugin is added/removed/reordered. This briefly leaves the graph in
-    /// an incomplete state between the disconnect pass and the reconnect
-    /// pass, which crashes `AVAudioEngine` if its render thread is actively
-    /// pulling audio through it at that moment -- so the engine is paused
-    /// first (which keeps all render resources allocated, unlike `stop()`)
-    /// and resumed afterward.
     private func rebuildPlaybackConnections() {
         guard let sourceNode, let preampUnit, let eqUnit, let format = workingFormat else { return }
 
@@ -359,12 +321,6 @@ final class AudioEngineManager: ObservableObject {
         }
     }
 
-    /// `monitorBuffer` is a fixed snapshot captured at call time (nil to
-    /// disable monitoring) rather than something read dynamically off
-    /// `self` inside the tap -- the tap runs on a realtime audio thread and
-    /// this class is main-actor isolated, so toggling monitoring re-installs
-    /// the tap with a fresh closure instead of mutating shared state from
-    /// the audio thread.
     private func installLevelTap(monitorBuffer: AudioRingBuffer? = nil) {
         playbackEngine.mainMixerNode.removeTap(onBus: 0)
         playbackEngine.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: nil) { [weak self] pcmBuffer, _ in
@@ -385,8 +341,6 @@ final class AudioEngineManager: ObservableObject {
         }
     }
 
-    // MARK: - Monitor (hear the processed signal directly)
-
     func setMonitorEnabled(_ enabled: Bool) {
         if enabled {
             startMonitor()
@@ -395,12 +349,6 @@ final class AudioEngineManager: ObservableObject {
         }
     }
 
-    /// Devices worth trying for monitoring, in order: whatever the system
-    /// is currently using, then anything with "MacBook"/"Built-in" in its
-    /// name (the most reliable targets -- never Bluetooth), then everything
-    /// else. Bluetooth outputs are tried first (since that's usually what
-    /// you actually want to hear through) but aren't trusted alone, given
-    /// how unreliable switching to them has proven to be.
     private func monitorDeviceCandidates() -> [AudioDeviceInfo] {
         var ordered: [AudioDeviceInfo] = []
         if let current = AudioDeviceManager.defaultOutputDevice() {
@@ -479,8 +427,6 @@ final class AudioEngineManager: ObservableObject {
         }
     }
 
-    // MARK: - Preamp
-
     func setPreampGain(_ db: Float) {
         preampGainDB = clamp(db, -24, 50)
         applyPreampToUnit()
@@ -504,8 +450,6 @@ final class AudioEngineManager: ObservableObject {
         tree.allParameters.first(where: { $0.identifier == "limiter" })?.value = preampLimiterEnabled ? 1 : 0
     }
 
-    // MARK: - EQ
-
     func updateEQBand(_ band: EQBand) {
         guard let index = eqBands.firstIndex(where: { $0.id == band.id }) else { return }
         eqBands[index] = band
@@ -528,8 +472,6 @@ final class AudioEngineManager: ObservableObject {
         applyEQBandsToUnit()
     }
 
-    /// Applies a quick curve's gains on top of the current bands, leaving
-    /// frequency/filter type/bypass untouched -- only the shape changes.
     func applyEQCurve(_ curve: EQCurvePreset) {
         for i in eqBands.indices where i < curve.gains.count {
             eqBands[i].gain = curve.gains[i]
@@ -548,8 +490,6 @@ final class AudioEngineManager: ObservableObject {
             filter.bypass = band.bypass
         }
     }
-
-    // MARK: - Plugin rack
 
     func addPlugin(_ kind: PluginKind) async {
         var slot = PluginSlot(kind: kind)
@@ -632,8 +572,6 @@ final class AudioEngineManager: ObservableObject {
         }
         return slot
     }
-
-    // MARK: - Presets
 
     func currentPreset(named name: String) -> Preset {
         Preset(name: name,

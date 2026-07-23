@@ -2,8 +2,6 @@ import Foundation
 import CoreAudio
 import AudioToolbox
 
-/// A lightweight description of a Core Audio device, enough for the UI to
-/// list devices and for the engine to address them by AudioDeviceID.
 struct AudioDeviceInfo: Identifiable, Hashable {
     let id: AudioDeviceID
     let uid: String
@@ -15,20 +13,9 @@ struct AudioDeviceInfo: Identifiable, Hashable {
     var isInputCapable: Bool { inputChannelCount > 0 }
 }
 
-/// Thin wrapper around the Core Audio HAL (AudioObject) C APIs, used to
-/// enumerate microphones and virtual devices like BlackHole.
-///
-/// Nothing here writes to the system-wide default device. Each engine is
-/// pointed at a specific device via `kAudioOutputUnitProperty_CurrentDevice`,
-/// so other apps are never affected and there's nothing to restore on quit.
 enum AudioDeviceManager {
 
-    /// Name fragment used to identify the virtual loopback driver.
-    /// BlackHole (https://github.com/ExistentialAudio/BlackHole) ships
-    /// devices named "BlackHole 2ch" / "BlackHole 16ch" etc.
     static let virtualDeviceNameHint = "BlackHole"
-
-    // MARK: - Enumeration
 
     static func allDevices() -> [AudioDeviceInfo] {
         var address = AudioObjectPropertyAddress(
@@ -61,12 +48,10 @@ enum AudioDeviceManager {
         allDevices().filter { $0.isOutputCapable }
     }
 
-    /// Real (non-virtual) microphones -- what the capture engine can read from.
     static func inputDevices() -> [AudioDeviceInfo] {
         allDevices().filter { $0.isInputCapable && !$0.name.localizedCaseInsensitiveContains(virtualDeviceNameHint) }
     }
 
-    /// Finds the first installed BlackHole (or compatible) virtual device.
     static func virtualLoopbackDevice() -> AudioDeviceInfo? {
         allDevices().first { $0.name.localizedCaseInsensitiveContains(virtualDeviceNameHint) && $0.isOutputCapable }
     }
@@ -75,10 +60,6 @@ enum AudioDeviceManager {
         virtualLoopbackDevice() != nil
     }
 
-    // MARK: - Default device
-
-    /// The mic the rest of the system is currently using -- used only to
-    /// pick a sane initial selection in the UI, never written to.
     static func defaultInputDevice() -> AudioDeviceInfo? {
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioHardwarePropertyDefaultInputDevice,
@@ -92,8 +73,6 @@ enum AudioDeviceManager {
         return info(for: deviceID)
     }
 
-    /// Read-only lookup of the system output, used to decide where the
-    /// optional Monitor tap plays out. Never written to.
     static func defaultOutputDevice() -> AudioDeviceInfo? {
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioHardwarePropertyDefaultOutputDevice,
@@ -107,11 +86,6 @@ enum AudioDeviceManager {
         return info(for: deviceID)
     }
 
-    // MARK: - Sample rate
-
-    /// Reads a device's current nominal sample rate. Used to pin BlackHole's
-    /// rate to whatever the microphone is running at, so the ring buffer
-    /// bridging the two engines never drifts or needs resampling.
     static func nominalSampleRate(_ deviceID: AudioDeviceID) -> Double? {
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioDevicePropertyNominalSampleRate,
@@ -136,8 +110,6 @@ enum AudioDeviceManager {
         let status = AudioObjectSetPropertyData(deviceID, &address, 0, nil, UInt32(MemoryLayout<Double>.size), &mutableRate)
         return status == noErr
     }
-
-    // MARK: - Property helpers
 
     static func deviceName(_ deviceID: AudioDeviceID) -> String? {
         var address = AudioObjectPropertyAddress(

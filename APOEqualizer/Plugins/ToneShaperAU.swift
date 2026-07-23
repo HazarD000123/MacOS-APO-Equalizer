@@ -1,8 +1,6 @@
 import AVFoundation
 import AudioToolbox
 
-/// Three-band Baxandall-style tone control: broad shelves on the outer bands
-/// and a wide bell in the middle. Musical tone-shaping, not surgical EQ.
 final class ToneShaperKernel: EffectKernel {
     var bypassed = false
     var sampleRate: Double = 48000 { didSet { rebuildFilters() } }

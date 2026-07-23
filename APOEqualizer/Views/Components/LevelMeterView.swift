@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// A thin horizontal peak meter for the post-processing output level.
 struct LevelMeterView: View {
     let level: Float
 

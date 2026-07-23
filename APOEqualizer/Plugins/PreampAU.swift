@@ -1,10 +1,6 @@
 import AVFoundation
 import AudioToolbox
 
-/// The "preamp" gain stage -- boosts or cuts the whole signal by a fixed
-/// number of dB before it hits the EQ and effect plugins, exactly like the
-/// Preamp line in Equalizer APO's config. An optional soft limiter keeps a
-/// boosted signal from hard-clipping.
 final class PreampKernel: EffectKernel {
     var bypassed = false
     var sampleRate: Double = 48000

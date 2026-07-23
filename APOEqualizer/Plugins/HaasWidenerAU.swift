@@ -1,23 +1,19 @@
 import AVFoundation
 import AudioToolbox
 
-/// Haas widener with a single bipolar delay knob: negative pans left,
-/// positive pans right, center is a no-op. Four routing modes pick the source
-/// before panning -- Mono (sum L+R), Stereo (keep L/R), Dual L, Dual R. Mono
-/// is the default here since the input is a single microphone.
 final class HaasWidenerKernel: EffectKernel {
     var bypassed = false
     var sampleRate: Double = 48000 { didSet { rebuildDelayLines() } }
 
-    var pan: Float = 15          // -40...40 ms; negative = pans left, positive = pans right
-    var routingMode: Float = 0   // 0=Mono, 1=Stereo, 2=Dual L, 3=Dual R
+    var pan: Float = 15
+    var routingMode: Float = 0
 
     private var delayLineL = DelayLine(maxDelaySamples: 4096)
     private var delayLineR = DelayLine(maxDelaySamples: 4096)
     private var cachedCapacity = 4096
 
     private func rebuildDelayLines() {
-        let capacity = max(64, Int(sampleRate * 0.05)) // 50ms of headroom
+        let capacity = max(64, Int(sampleRate * 0.05))
         guard capacity != cachedCapacity else { return }
         delayLineL = DelayLine(maxDelaySamples: capacity)
         delayLineR = DelayLine(maxDelaySamples: capacity)
@@ -40,20 +36,17 @@ final class HaasWidenerKernel: EffectKernel {
             let sourceL: Float
             let sourceR: Float
             switch mode {
-            case 2: // Dual L -- both sides sourced from the left channel
+            case 2:
                 sourceL = l[i]; sourceR = l[i]
-            case 3: // Dual R -- both sides sourced from the right channel
+            case 3:
                 sourceL = r[i]; sourceR = r[i]
-            case 1: // Stereo -- preserve the existing L/R image
+            case 1:
                 sourceL = l[i]; sourceR = r[i]
-            default: // Mono -- sum to a single center source first
+            default:
                 let m = (l[i] + r[i]) * 0.5
                 sourceL = m; sourceR = m
             }
 
-            // Delaying a channel makes the *other* channel's sound arrive
-            // first, so the ear perceives the source from that side
-            // (precedence effect): pan > 0 (right) delays the left channel.
             l[i] = delayLineL.process(sourceL, delaySamples: pan > 0 ? delaySamples : 0)
             r[i] = delayLineR.process(sourceR, delaySamples: pan < 0 ? delaySamples : 0)
         }

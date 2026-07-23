@@ -1,17 +1,8 @@
 import Foundation
 
-/// A quick-apply EQ curve -- just gain values for the standard 10-band
-/// layout, applied on top of whatever bands already exist. Distinct from
-/// `Preset` (which also captures the preamp and the whole plugin rack):
-/// these are one-click starting points for the graphic EQ specifically,
-/// the same idea as the built-in curves in most EQ apps (Bass Booster,
-/// Vocal, Flat, etc.), picked to make sense for this app's actual use case
-/// -- processing a voice, not mixing a song.
 struct EQCurvePreset: Identifiable, Hashable {
     let id: String
     let name: String
-    /// One gain value (dB) per band, in the same order as
-    /// `EQBand.defaultTenBand()`: 31/62/125/250/500/1k/2k/4k/8k/16k Hz.
     let gains: [Float]
 
     static let all: [EQCurvePreset] = [

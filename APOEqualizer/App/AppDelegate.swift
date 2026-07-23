@@ -9,7 +9,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        // Release the mic/BlackHole engines cleanly if the app quits while running.
         engine.stop()
     }
 

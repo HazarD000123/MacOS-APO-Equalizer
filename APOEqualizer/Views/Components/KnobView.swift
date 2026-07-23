@@ -1,12 +1,5 @@
 import SwiftUI
 
-/// A rotary knob control, used for the preamp gain. Drag vertically to
-/// change the value (the standard "virtual knob" interaction, since a
-/// literal circular drag is fussier to use with a mouse/trackpad).
-/// Double-click resets to `resetValue`, or the midpoint of the range if
-/// that's nil -- only correct as a default for symmetric ranges, so any
-/// asymmetric range (like the preamp's -24...+50dB) should pass one
-/// explicitly rather than silently resetting to some off-center value.
 struct KnobView: View {
     @Binding var value: Float
     let range: ClosedRange<Float>

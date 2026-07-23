@@ -1,9 +1,5 @@
 import SwiftUI
 
-/// Dark hardware-unit chrome for a plugin panel: fixed dark chassis
-/// (regardless of the host app's light/dark appearance, same as real
-/// plugin windows), a bold title, an accent-tinted subtitle, and corner
-/// screws for that "physical rack unit" feel.
 struct PluginChrome<Content: View>: View {
     let title: String
     let subtitle: String
@@ -52,9 +48,6 @@ struct PluginChrome<Content: View>: View {
     }
 }
 
-/// A row of pill-style mode buttons, styled like the "Dual L / Dual R"
-/// selectors real routing-mode plugins use, instead of a native segmented
-/// control.
 struct PillSelector: View {
     let options: [String]
     @Binding var selection: Int

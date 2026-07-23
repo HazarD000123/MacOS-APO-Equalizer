@@ -1,11 +1,5 @@
 import SwiftUI
 
-/// The main signal-chain list -- Preamp, EQ, and the plugin rack shown as
-/// sequential numbered stages, each independently powered on/off, styled
-/// after Equalizer APO's Configuration Editor. Preamp and EQ sit at fixed
-/// positions 1 and 2 (that's the actual order the audio engine wires them
-/// in; this view can't reorder past that without rearchitecting the
-/// engine), and plugins fill in after them as stages 3+.
 struct ChainView: View {
     @EnvironmentObject var engine: AudioEngineManager
     @State private var eqExpanded = true
@@ -29,8 +23,6 @@ struct ChainView: View {
             .padding(20)
         }
     }
-
-    // MARK: - Toolbar
 
     private var toolbar: some View {
         HStack(spacing: 10) {
@@ -60,8 +52,6 @@ struct ChainView: View {
         }
     }
 
-    // MARK: - Preamp (stage 1, fixed)
-
     private var preampRow: some View {
         ChainRowChrome(number: 1, isEnabled: Binding(
             get: { !engine.preampBypassed },
@@ -88,8 +78,6 @@ struct ChainView: View {
             }
         }
     }
-
-    // MARK: - Equalizer (stage 2, fixed)
 
     private var eqRow: some View {
         ChainRowChrome(number: 2, isEnabled: Binding(
@@ -124,8 +112,6 @@ struct ChainView: View {
             }
         }
     }
-
-    // MARK: - Plugin rack (stages 3+, reorderable)
 
     private func pluginRow(slot: PluginSlot, number: Int) -> some View {
         let index = engine.pluginSlots.firstIndex(where: { $0.id == slot.id })
@@ -183,8 +169,6 @@ struct ChainView: View {
         guard let idx = engine.pluginSlots.firstIndex(where: { $0.id == slot.id }), idx < engine.pluginSlots.count - 1 else { return }
         engine.movePlugins(fromOffsets: IndexSet(integer: idx), toOffset: idx + 2)
     }
-
-    // MARK: - Add stage
 
     private var addPluginRow: some View {
         Menu {

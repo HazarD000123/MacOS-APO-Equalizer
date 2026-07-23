@@ -1,28 +1,23 @@
 import AVFoundation
 import AudioToolbox
 
-/// Shared mapping so the kernel and the UI curve agree on what the Process
-/// knob resolves to internally.
 enum PunchCompressorMapping {
     static func thresholdDB(forProcess process: Float) -> Float {
-        -6 - clamp(process / 100, 0, 1) * 34   // -6dB (barely engages) ... -40dB (heavy)
+        -6 - clamp(process / 100, 0, 1) * 34
     }
     static func ratio(forProcess process: Float) -> Float {
-        1 + clamp(process / 100, 0, 1) * 7      // 1:1 ... 8:1
+        1 + clamp(process / 100, 0, 1) * 7
     }
 }
 
-/// Three-knob compressor (Input, Process, Output). Threshold, ratio and
-/// saturation are all derived from the single Process knob.
 final class PunchCompressorKernel: EffectKernel {
     var bypassed = false
     var sampleRate: Double = 48000 { didSet { rebuildEnvelope() } }
 
-    var inputDriveDB: Float = 0     // -30...30 dB, pushes harder into compression/saturation
-    var process: Float = 40         // 0-100 %, the single "how much" knob
-    var outputGainDB: Float = 0     // -30...30 dB, clean trim
+    var inputDriveDB: Float = 0
+    var process: Float = 40
+    var outputGainDB: Float = 0
 
-    // Fixed timing, tuned for a punchy drum-bus character.
     private let attackMs: Float = 8
     private let releaseMs: Float = 140
 

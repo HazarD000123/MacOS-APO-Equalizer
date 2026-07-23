@@ -1,10 +1,5 @@
 import SwiftUI
 
-/// The row shell every stage in the signal chain list shares: a numbered
-/// badge, a power toggle, and a content area -- the same visual vocabulary
-/// Equalizer APO's stage list uses (each row independently numbered,
-/// togglable, and expandable), reimplemented natively rather than emulated
-/// pixel-for-pixel.
 struct ChainRowChrome<Content: View>: View {
     let number: Int
     @Binding var isEnabled: Bool
@@ -37,9 +32,6 @@ struct ChainRowChrome<Content: View>: View {
     }
 }
 
-/// A pill-style button matching Equalizer APO's "Open panel" affordance --
-/// used here to expand/collapse a stage's detail controls inline instead of
-/// opening a separate window.
 struct OpenPanelButton: View {
     @Binding var isExpanded: Bool
 
