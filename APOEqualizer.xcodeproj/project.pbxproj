@@ -1,0 +1,498 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00E3A82562D19DB01235A285 /* AudioEngineManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B22851AC6CE6988F8FB62CD /* AudioEngineManager.swift */; };
+		086D8171B9C47500638F922B /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B809C113AF04D5529F0E44 /* MenuBarView.swift */; };
+		0A9ED2B6773AC012CF066053 /* DeviceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B861AFB095F0961C9EAEF /* DeviceSettingsView.swift */; };
+		1A0BB5805652FCA1B86022CF /* Preset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BD3B9ED16CAFFB5079A4E0 /* Preset.swift */; };
+		29EF5E5F2BB2BEC68313A370 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0332E61069C26A7C172CA525 /* AppDelegate.swift */; };
+		2BB00B4F9FD1D86D4C07D65B /* AudioRingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E47CA6A22B1D57F91482A92 /* AudioRingBuffer.swift */; };
+		312CA3F48364083791157CC3 /* DSPUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB166C11EFA7683575A0A6 /* DSPUtilities.swift */; };
+		3665A9C21833D97F72EEEA50 /* PunchCompressorAU.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D1008A548430D365463277 /* PunchCompressorAU.swift */; };
+		452145B85227302111F8F085 /* PluginPanels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E311A88D040B7C68299777D /* PluginPanels.swift */; };
+		4B2774CCCE79B2D7BEC6349B /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFAEAEAAEA6F81FF856CD64 /* AppearanceMode.swift */; };
+		54847A4B7874B99FB7FCFFDC /* PowerToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FFE65211643D7C0D48FEA8 /* PowerToggleButton.swift */; };
+		591A07C070A893C3EBD414DC /* ToneShaperAU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B782072FB4DDAC64EC5725 /* ToneShaperAU.swift */; };
+		60B0FA06EA266969225935EC /* APOEqualizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE072DACDD11428F81F3EA6 /* APOEqualizerApp.swift */; };
+		64E74FD49BF7E171219A9B78 /* PluginSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1BEC61B8E0B4B000493C865 /* PluginSlot.swift */; };
+		70BC74CACA51EFF9D429A7A2 /* ChainRowChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4588E795ED1D2A8B796E36 /* ChainRowChrome.swift */; };
+		7771ACEFB89C865DE3172CB8 /* PluginTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB02B9CB0EC1CA4DED6E6C /* PluginTheme.swift */; };
+		790804140BEF70A5FFA137FF /* KnobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED993F307FDD28DD9994F2B2 /* KnobView.swift */; };
+		7AA95E1A72226789FF3A1E30 /* PreampAU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A1375AD815682802F894 /* PreampAU.swift */; };
+		8E93B9B5E473A7BA667B62FD /* MaximizerAU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BD778BFDE6BBFFA7E959B2 /* MaximizerAU.swift */; };
+		9D91DBCB1D4C91DD25582BF1 /* PluginChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E002F481D2E8D115A15E05 /* PluginChrome.swift */; };
+		AFE06CD946682B2EF26C433A /* EQBand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E78B146480780019674D8E /* EQBand.swift */; };
+		B23BDC02A9A20DB89740E661 /* AudioDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E1577E3F969B7691D70929 /* AudioDeviceManager.swift */; };
+		B36EA8120BBE591E4D299828 /* EQCurvePreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6775048CF8F9611221E69866 /* EQCurvePreset.swift */; };
+		BB52F8800B8B9BFF224F9EE8 /* BaseEffectAudioUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4161EEECC73C51C8232118 /* BaseEffectAudioUnit.swift */; };
+		C9C8B050F1CBFD553F1A4546 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 668B6DBBD4347B421BA9FC4C /* Assets.xcassets */; };
+		D37455EF4593FC64856EFB18 /* VerticalSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D2A0F4D98A8DE9D5594508 /* VerticalSlider.swift */; };
+		D74A9A2B23686CD22D5098A9 /* ChainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8931D0FA113970028235C09 /* ChainView.swift */; };
+		DF32FC2D902B5F8B3AABD2DD /* HardwareKnobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79DE2717F2F3A135B185A5A /* HardwareKnobView.swift */; };
+		ED86F5E3AA44653DB513097D /* StereoImagerAU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CC5C05F8CE3D9685C20370 /* StereoImagerAU.swift */; };
+		F05832978CA3AECA3C72B572 /* LevelMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822494DD46017169C764E645 /* LevelMeterView.swift */; };
+		F1CE3AAE831C6BE3EEE38929 /* PluginRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8E081C3306276E2AC158C7 /* PluginRegistry.swift */; };
+		F77B1727063B22F48DEEB773 /* HaasWidenerAU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E1D8E884705F3E44F62BC3 /* HaasWidenerAU.swift */; };
+		F89F96E6E759C8D6B0EB68E1 /* PresetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB81794B25BAA570C2F036C /* PresetsView.swift */; };
+		FE8069584116997D68234D85 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264BAAC0684ED0227A30234C /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00BD3B9ED16CAFFB5079A4E0 /* Preset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preset.swift; sourceTree = "<group>"; };
+		0332E61069C26A7C172CA525 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		09FFE65211643D7C0D48FEA8 /* PowerToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerToggleButton.swift; sourceTree = "<group>"; };
+		0E47CA6A22B1D57F91482A92 /* AudioRingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRingBuffer.swift; sourceTree = "<group>"; };
+		12E1D8E884705F3E44F62BC3 /* HaasWidenerAU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HaasWidenerAU.swift; sourceTree = "<group>"; };
+		1CE0A1375AD815682802F894 /* PreampAU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreampAU.swift; sourceTree = "<group>"; };
+		219395EE190886EC0BEB8EEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		264BAAC0684ED0227A30234C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2BE072DACDD11428F81F3EA6 /* APOEqualizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APOEqualizerApp.swift; sourceTree = "<group>"; };
+		44BD778BFDE6BBFFA7E959B2 /* MaximizerAU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaximizerAU.swift; sourceTree = "<group>"; };
+		58CC5C05F8CE3D9685C20370 /* StereoImagerAU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StereoImagerAU.swift; sourceTree = "<group>"; };
+		668B6DBBD4347B421BA9FC4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6775048CF8F9611221E69866 /* EQCurvePreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQCurvePreset.swift; sourceTree = "<group>"; };
+		6ACB166C11EFA7683575A0A6 /* DSPUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPUtilities.swift; sourceTree = "<group>"; };
+		72D2A0F4D98A8DE9D5594508 /* VerticalSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalSlider.swift; sourceTree = "<group>"; };
+		822494DD46017169C764E645 /* LevelMeterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelMeterView.swift; sourceTree = "<group>"; };
+		89B782072FB4DDAC64EC5725 /* ToneShaperAU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToneShaperAU.swift; sourceTree = "<group>"; };
+		8E311A88D040B7C68299777D /* PluginPanels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginPanels.swift; sourceTree = "<group>"; };
+		958B861AFB095F0961C9EAEF /* DeviceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsView.swift; sourceTree = "<group>"; };
+		9B22851AC6CE6988F8FB62CD /* AudioEngineManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngineManager.swift; sourceTree = "<group>"; };
+		A7699E5DC46015D5FB92C5FA /* APOEqualizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APOEqualizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A7E78B146480780019674D8E /* EQBand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQBand.swift; sourceTree = "<group>"; };
+		AAFAEAEAAEA6F81FF856CD64 /* AppearanceMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceMode.swift; sourceTree = "<group>"; };
+		B8931D0FA113970028235C09 /* ChainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChainView.swift; sourceTree = "<group>"; };
+		BD4588E795ED1D2A8B796E36 /* ChainRowChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChainRowChrome.swift; sourceTree = "<group>"; };
+		BFCB02B9CB0EC1CA4DED6E6C /* PluginTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginTheme.swift; sourceTree = "<group>"; };
+		C79DE2717F2F3A135B185A5A /* HardwareKnobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareKnobView.swift; sourceTree = "<group>"; };
+		CBFC31150F91B234BCDFBA23 /* APOEqualizer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = APOEqualizer.entitlements; sourceTree = "<group>"; };
+		CCB81794B25BAA570C2F036C /* PresetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetsView.swift; sourceTree = "<group>"; };
+		E0D1008A548430D365463277 /* PunchCompressorAU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PunchCompressorAU.swift; sourceTree = "<group>"; };
+		E1E002F481D2E8D115A15E05 /* PluginChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginChrome.swift; sourceTree = "<group>"; };
+		EA8E081C3306276E2AC158C7 /* PluginRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginRegistry.swift; sourceTree = "<group>"; };
+		ED993F307FDD28DD9994F2B2 /* KnobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnobView.swift; sourceTree = "<group>"; };
+		EF4161EEECC73C51C8232118 /* BaseEffectAudioUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseEffectAudioUnit.swift; sourceTree = "<group>"; };
+		F1BEC61B8E0B4B000493C865 /* PluginSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginSlot.swift; sourceTree = "<group>"; };
+		F8B809C113AF04D5529F0E44 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		F8E1577E3F969B7691D70929 /* AudioDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDeviceManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		00EFC1BE77D31D74D6B8A8F9 /* APOEqualizer */ = {
+			isa = PBXGroup;
+			children = (
+				CBFC31150F91B234BCDFBA23 /* APOEqualizer.entitlements */,
+				219395EE190886EC0BEB8EEB /* Info.plist */,
+				A6B2ED6E9AAAB6B27E899BC0 /* App */,
+				A0778F6E1D87850997B82821 /* Audio */,
+				D7613BA53CA36891169D27C5 /* Models */,
+				F6506EA659FA280523CEC81D /* Plugins */,
+				E56C1511763301577B2D9B7F /* Resources */,
+				FB21507A361E30607F06E97B /* Views */,
+			);
+			path = APOEqualizer;
+			sourceTree = "<group>";
+		};
+		429E03CE612157A888B7E239 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BD4588E795ED1D2A8B796E36 /* ChainRowChrome.swift */,
+				C79DE2717F2F3A135B185A5A /* HardwareKnobView.swift */,
+				ED993F307FDD28DD9994F2B2 /* KnobView.swift */,
+				822494DD46017169C764E645 /* LevelMeterView.swift */,
+				E1E002F481D2E8D115A15E05 /* PluginChrome.swift */,
+				09FFE65211643D7C0D48FEA8 /* PowerToggleButton.swift */,
+				72D2A0F4D98A8DE9D5594508 /* VerticalSlider.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		4B3D7DC26F06E03590F793B8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A7699E5DC46015D5FB92C5FA /* APOEqualizer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A0778F6E1D87850997B82821 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				F8E1577E3F969B7691D70929 /* AudioDeviceManager.swift */,
+				9B22851AC6CE6988F8FB62CD /* AudioEngineManager.swift */,
+				0E47CA6A22B1D57F91482A92 /* AudioRingBuffer.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		A6B2ED6E9AAAB6B27E899BC0 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2BE072DACDD11428F81F3EA6 /* APOEqualizerApp.swift */,
+				0332E61069C26A7C172CA525 /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		D7613BA53CA36891169D27C5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A7E78B146480780019674D8E /* EQBand.swift */,
+				6775048CF8F9611221E69866 /* EQCurvePreset.swift */,
+				F1BEC61B8E0B4B000493C865 /* PluginSlot.swift */,
+				00BD3B9ED16CAFFB5079A4E0 /* Preset.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E56C1511763301577B2D9B7F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				668B6DBBD4347B421BA9FC4C /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F6506EA659FA280523CEC81D /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				EF4161EEECC73C51C8232118 /* BaseEffectAudioUnit.swift */,
+				6ACB166C11EFA7683575A0A6 /* DSPUtilities.swift */,
+				12E1D8E884705F3E44F62BC3 /* HaasWidenerAU.swift */,
+				44BD778BFDE6BBFFA7E959B2 /* MaximizerAU.swift */,
+				EA8E081C3306276E2AC158C7 /* PluginRegistry.swift */,
+				1CE0A1375AD815682802F894 /* PreampAU.swift */,
+				E0D1008A548430D365463277 /* PunchCompressorAU.swift */,
+				58CC5C05F8CE3D9685C20370 /* StereoImagerAU.swift */,
+				89B782072FB4DDAC64EC5725 /* ToneShaperAU.swift */,
+			);
+			path = Plugins;
+			sourceTree = "<group>";
+		};
+		FA692F8B0EA0FE07CE809C0A = {
+			isa = PBXGroup;
+			children = (
+				00EFC1BE77D31D74D6B8A8F9 /* APOEqualizer */,
+				4B3D7DC26F06E03590F793B8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FB21507A361E30607F06E97B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AAFAEAEAAEA6F81FF856CD64 /* AppearanceMode.swift */,
+				B8931D0FA113970028235C09 /* ChainView.swift */,
+				264BAAC0684ED0227A30234C /* ContentView.swift */,
+				958B861AFB095F0961C9EAEF /* DeviceSettingsView.swift */,
+				F8B809C113AF04D5529F0E44 /* MenuBarView.swift */,
+				8E311A88D040B7C68299777D /* PluginPanels.swift */,
+				BFCB02B9CB0EC1CA4DED6E6C /* PluginTheme.swift */,
+				CCB81794B25BAA570C2F036C /* PresetsView.swift */,
+				429E03CE612157A888B7E239 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C63E677DC88868A2ECD3BD1D /* APOEqualizer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC132426B9B3B7DBAA254E55 /* Build configuration list for PBXNativeTarget "APOEqualizer" */;
+			buildPhases = (
+				FFE8FF1A8BE53155511DB279 /* Sources */,
+				BE2E2B59C4AD456BA9B242BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = APOEqualizer;
+			packageProductDependencies = (
+			);
+			productName = APOEqualizer;
+			productReference = A7699E5DC46015D5FB92C5FA /* APOEqualizer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5ED74EC2A4A17AD0CCDF661D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					C63E677DC88868A2ECD3BD1D = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 100B10DA0E45A28E40711475 /* Build configuration list for PBXProject "APOEqualizer" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = FA692F8B0EA0FE07CE809C0A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4B3D7DC26F06E03590F793B8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C63E677DC88868A2ECD3BD1D /* APOEqualizer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BE2E2B59C4AD456BA9B242BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9C8B050F1CBFD553F1A4546 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FFE8FF1A8BE53155511DB279 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60B0FA06EA266969225935EC /* APOEqualizerApp.swift in Sources */,
+				29EF5E5F2BB2BEC68313A370 /* AppDelegate.swift in Sources */,
+				4B2774CCCE79B2D7BEC6349B /* AppearanceMode.swift in Sources */,
+				B23BDC02A9A20DB89740E661 /* AudioDeviceManager.swift in Sources */,
+				00E3A82562D19DB01235A285 /* AudioEngineManager.swift in Sources */,
+				2BB00B4F9FD1D86D4C07D65B /* AudioRingBuffer.swift in Sources */,
+				BB52F8800B8B9BFF224F9EE8 /* BaseEffectAudioUnit.swift in Sources */,
+				70BC74CACA51EFF9D429A7A2 /* ChainRowChrome.swift in Sources */,
+				D74A9A2B23686CD22D5098A9 /* ChainView.swift in Sources */,
+				FE8069584116997D68234D85 /* ContentView.swift in Sources */,
+				312CA3F48364083791157CC3 /* DSPUtilities.swift in Sources */,
+				0A9ED2B6773AC012CF066053 /* DeviceSettingsView.swift in Sources */,
+				AFE06CD946682B2EF26C433A /* EQBand.swift in Sources */,
+				B36EA8120BBE591E4D299828 /* EQCurvePreset.swift in Sources */,
+				F77B1727063B22F48DEEB773 /* HaasWidenerAU.swift in Sources */,
+				DF32FC2D902B5F8B3AABD2DD /* HardwareKnobView.swift in Sources */,
+				790804140BEF70A5FFA137FF /* KnobView.swift in Sources */,
+				F05832978CA3AECA3C72B572 /* LevelMeterView.swift in Sources */,
+				8E93B9B5E473A7BA667B62FD /* MaximizerAU.swift in Sources */,
+				086D8171B9C47500638F922B /* MenuBarView.swift in Sources */,
+				9D91DBCB1D4C91DD25582BF1 /* PluginChrome.swift in Sources */,
+				452145B85227302111F8F085 /* PluginPanels.swift in Sources */,
+				F1CE3AAE831C6BE3EEE38929 /* PluginRegistry.swift in Sources */,
+				64E74FD49BF7E171219A9B78 /* PluginSlot.swift in Sources */,
+				7771ACEFB89C865DE3172CB8 /* PluginTheme.swift in Sources */,
+				54847A4B7874B99FB7FCFFDC /* PowerToggleButton.swift in Sources */,
+				7AA95E1A72226789FF3A1E30 /* PreampAU.swift in Sources */,
+				1A0BB5805652FCA1B86022CF /* Preset.swift in Sources */,
+				F89F96E6E759C8D6B0EB68E1 /* PresetsView.swift in Sources */,
+				3665A9C21833D97F72EEEA50 /* PunchCompressorAU.swift in Sources */,
+				ED86F5E3AA44653DB513097D /* StereoImagerAU.swift in Sources */,
+				591A07C070A893C3EBD414DC /* ToneShaperAU.swift in Sources */,
+				D37455EF4593FC64856EFB18 /* VerticalSlider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0AD443BE8402C85CECF0BC94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		35A0B21FF3C4C9602BCF14D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = APOEqualizer/APOEqualizer.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = APOEqualizer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LSUIElement = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ryanghosh.apoequalizer;
+				PRODUCT_NAME = "APO Equalizer";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		86830827AA12A31765028296 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F9D20569625ABB4225299D22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = APOEqualizer/APOEqualizer.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = APOEqualizer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LSUIElement = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ryanghosh.apoequalizer;
+				PRODUCT_NAME = "APO Equalizer";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		100B10DA0E45A28E40711475 /* Build configuration list for PBXProject "APOEqualizer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				86830827AA12A31765028296 /* Debug */,
+				0AD443BE8402C85CECF0BC94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BC132426B9B3B7DBAA254E55 /* Build configuration list for PBXNativeTarget "APOEqualizer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F9D20569625ABB4225299D22 /* Debug */,
+				35A0B21FF3C4C9602BCF14D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5ED74EC2A4A17AD0CCDF661D /* Project object */;
+}

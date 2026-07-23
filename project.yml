@@ -1,0 +1,58 @@
+name: APOEqualizer
+options:
+  bundleIdPrefix: com.ryanghosh.apoequalizer
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    CODE_SIGN_STYLE: Automatic
+targets:
+  APOEqualizer:
+    type: application
+    platform: macOS
+    sources:
+      - path: APOEqualizer
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ryanghosh.apoequalizer
+        PRODUCT_NAME: APO Equalizer
+        INFOPLIST_FILE: APOEqualizer/Info.plist
+        CODE_SIGN_ENTITLEMENTS: APOEqualizer/APOEqualizer.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        LSUIElement: NO
+        COMBINE_HIDPI_IMAGES: YES
+    info:
+      path: APOEqualizer/Info.plist
+      properties:
+        CFBundleDisplayName: APO Equalizer
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSApplicationCategoryType: public.app-category.utilities
+        LSMinimumSystemVersion: "13.0"
+        NSMicrophoneUsageDescription: "APO Equalizer captures system audio through a virtual loopback device (BlackHole) so it can apply EQ and effects before sending it to your speakers or headphones. No microphone audio is ever recorded or transmitted."
+        NSPrincipalClass: NSApplication
+        LSApplicationCategoryType: public.app-category.music
+        NSHumanReadableCopyright: "Copyright © 2026."
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: false
+    entitlements:
+      path: APOEqualizer/APOEqualizer.entitlements
+      properties:
+        com.apple.security.app-sandbox: false
+        com.apple.security.device.audio-input: true
+        com.apple.security.files.user-selected.read-write: true
+schemes:
+  APOEqualizer:
+    build:
+      targets:
+        APOEqualizer: all
+    run:
+      config: Debug
+    archive:
+      config: Release
