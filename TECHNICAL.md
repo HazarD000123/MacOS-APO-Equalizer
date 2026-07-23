@@ -1,150 +1,71 @@
 # Technical notes
 
-How APO Equalizer actually works: the audio path, the plugin architecture,
-build details, and the rough edges. If you just want to use the app,
-[README.md](README.md) is what you want instead.
+Architecture and implementation details. See [README.md](README.md) if you just want to use the app.
 
-## The audio path
+## Audio path
 
-macOS won't let a single `AVAudioEngine` read from one device and write to
-a different one. Unlike iOS, an engine's input and output nodes share the
-same underlying Core Audio I/O unit on the Mac, so pointing input at your
-microphone and output at BlackHole on the same engine doesn't work — one
-device ends up controlling both directions and you can't set them
-independently.
+A single `AVAudioEngine` cannot read from one device and write to another. On macOS its input and output nodes share the same Core Audio I/O unit, so pointing input at the microphone and output at BlackHole on one engine doesn't work.
 
-The workaround, and what most virtual-microphone tools do (Loopback,
-VoiceMeeter, and friends), is to run two engines and bridge them by hand:
+The way around it, and what Loopback and VoiceMeeter do, is two engines bridged by hand:
 
-1. A capture engine whose input is your real microphone. A tap on its input
-   node writes samples into a small ring buffer.
-2. A playback engine whose signal chain is Preamp → EQ → plugin rack, fed
-   by an `AVAudioSourceNode` that reads from that same ring buffer, with its
-   output pointed at BlackHole.
+1. A capture engine whose input is the real microphone. A tap on the input node writes samples into a ring buffer.
+2. A playback engine where an `AVAudioSourceNode` reads that ring buffer and feeds Preamp -> EQ -> plugin rack, with output pointed at BlackHole.
 
-Start wires both engines up and starts them; Stop tears them both down.
-Neither one ever touches the system-wide default input or output device —
-`AudioDeviceManager` only ever sets the device for these two specific
-engines, via `kAudioOutputUnitProperty_CurrentDevice`. Switching the system
-default instead is tempting but not worth it — it breaks other apps' audio
-and behaves badly with Bluetooth devices.
+Start wires up both engines, Stop tears both down. `AudioDeviceManager` assigns devices per engine with `kAudioOutputUnitProperty_CurrentDevice` and never writes the system default, which would affect every other app and behaves badly with Bluetooth.
 
-The ring buffer (`AudioRingBuffer`) is a plain single-producer/
-single-consumer circular buffer, no locks. The capture tap writes, the
-source node reads, and if the reader falls behind, it drops the oldest
-samples instead of letting latency grow without bound.
+`AudioRingBuffer` is a lock-free single-producer/single-consumer circular buffer. The capture tap writes, the source node reads, and if the reader falls behind it drops the oldest samples rather than letting latency grow unbounded.
 
-## Plugins are real Audio Units, just not third-party ones
+## Plugins
 
-BasiQ, Quick Haas, Wider, and SweetDrums are real commercial plugins this
-app doesn't bundle or host. Each rack effect is instead built the same way
-a real plugin would be: an actual `AUAudioUnit` subclass with its own
-`AUParameterTree`, registered in-process with
-`AUAudioUnit.registerSubclass(_:as:name:version:)`, and inserted into the
-`AVAudioEngine` graph exactly like a third-party plugin would be. The DSP
-is original — modeled on what each category of plugin does, not copied
-from any of them.
+Each rack effect is an `AUAudioUnit` subclass with its own `AUParameterTree`, registered in-process with `AUAudioUnit.registerSubclass(_:as:name:version:)` and inserted into the `AVAudioEngine` graph the same way a third-party plugin would be. All the DSP is written from scratch.
 
-**Tone Shaper** is a 3-band Baxandall-style EQ — low shelf, mid bell, high
-shelf — the same broad, musical tone-control character as basiQ's Baxandall
-Simulation Equalizer.
+**Tone Shaper.** 3-band Baxandall EQ: low shelf, mid bell, high shelf. Broad and musical rather than surgical.
 
-**Haas Widener** delays one channel relative to the other using the
-precedence effect. One bipolar knob controls it (negative pans left,
-positive pans right), plus Mono/Stereo/Dual L/Dual R input routing,
-matching Quick Haas's control layout rather than exposing delay time and
-side as separate knobs.
+**Haas Widener.** Delays one channel against the other to exploit the precedence effect. A single bipolar knob controls it, negative pans left and positive pans right, with Mono, Stereo, Dual L and Dual R routing to pick the source before panning.
 
-**Stereo Imager** does classic mid/side width control, plus an all-pass
-decorrelation network that generates new stereo content above 100% width
-instead of only scaling whatever left/right difference already exists.
-That second part isn't optional here — this app's input is a mono
-microphone, and a plain mid/side widener has nothing to work with on a
-signal where left and right start out identical. It stays mono-compatible
-by construction: `L = mid + side`, `R = mid - side`, so `L + R` always
-collapses back to `2 × mid` regardless of what's in `side`. A bass-mono
-filter keeps low frequencies centered so they don't phase out.
+**Stereo Imager.** Mid/side width control plus an all-pass decorrelation network that generates new stereo content above 100% width. The decorrelation is the important part here: the input is a mono microphone, and a plain mid/side widener has nothing to scale when left and right start out identical. Mono compatibility holds by construction, since `L = mid + side` and `R = mid - side` means `L + R` always collapses to `2 * mid`. A bass-mono filter keeps low frequencies centred so they don't phase out.
 
-**Punch Compressor** derives threshold, ratio, and a saturation stage from
-a single Process knob, plus separate Input and Output trims — a
-one-knob-does-most-of-it interface rather than six raw compressor
-parameters.
+**Punch Compressor.** Threshold, ratio and a saturation stage are all derived from one Process knob, with separate Input and Output trims.
 
-**Maximizer** is the loud one. Upward expansion lifts the quiet parts with
-a power curve, drive pushes the level, and the signal hard clips at 0 dBFS
-rather than being soft-limited. The flat-topped clipping is what makes it
-read as louder — peaks can't exceed full scale, so the density comes from
-filling the space underneath rather than from a taller peak. An output trim
-pulls the result back down without undoing that density.
+**Maximizer.** Upward expansion lifts the quiet parts with a power curve, drive pushes the level, and the signal hard clips at 0 dBFS instead of being soft limited. Peaks can't exceed full scale, so the extra loudness comes from filling the space under the ceiling rather than from a taller peak. An output trim brings it back down without losing that density.
 
-Hosting real third-party AU or VST plugins instead of these would be a
-meaningfully bigger project — a proper plugin-scanning and hosting layer —
-and isn't implemented here.
+Hosting real third-party AU or VST plugins would need a proper scanning and hosting layer, and isn't implemented.
 
 ## Building
 
-**With Xcode:** open `APOEqualizer.xcodeproj`, select the APOEqualizer
-scheme, and run. The project file is generated by
-[XcodeGen](https://github.com/yonaskolb/XcodeGen) from `project.yml`. If
-you add or remove source files, re-run `xcodegen generate` rather than
-editing the `.xcodeproj` by hand — hand edits get overwritten the next time
-it regenerates.
+With Xcode: open `APOEqualizer.xcodeproj`, pick the APOEqualizer scheme and run. The project file is generated from `project.yml` by [XcodeGen](https://github.com/yonaskolb/XcodeGen), so re-run `xcodegen generate` after adding or removing source files instead of editing the `.xcodeproj`, which gets overwritten.
 
-**Without Xcode:** run `./build.sh`. It compiles everything with `swiftc`
-directly and ad-hoc signs the result, which is enough to run on your own
-machine. Sharing the built app with someone else needs a real Developer ID
-signature, since Gatekeeper won't allow ad-hoc signed apps from other
-machines — that part still needs Xcode or `notarytool` eventually.
+Without Xcode: run `./build.sh`. It compiles with `swiftc` and ad-hoc signs the result, which is enough to run locally. Giving the built app to someone else needs a Developer ID signature and notarization.
 
-The app ships unsandboxed. Sandboxing and an in-process Audio Unit host
-don't get along, and direct Core Audio device access is awkward inside the
-sandbox too, so this is meant to be distributed outside the Mac App Store —
-same as BlackHole and Loopback.
+The app is unsandboxed. In-process Audio Unit hosting and direct Core Audio device access are both awkward under the sandbox, so this is built for distribution outside the App Store, same as BlackHole and Loopback.
 
-The first time you hit Start, macOS shows a microphone permission prompt.
-It's a real permission request, not a formality: the app genuinely captures
-your physical microphone, which is the entire point, and republishes it
-through BlackHole. If you deny it, or if it somehow isn't granted, Start
-will silently produce no audio instead of failing with an error — worth
-remembering if something seems broken and nothing's telling you why.
+macOS prompts for microphone access the first time you press Start. If access is denied, capture quietly delivers silence instead of returning an error, so check that first when there is no audio and no obvious reason why.
 
-## Project layout
+## Layout
 
 ```
 APOEqualizer/
-  App/                 App entry point, AppDelegate (owns the engine)
+  App/                  Entry point and AppDelegate, which owns the engine
   Audio/
-    AudioDeviceManager  Core Audio device enumeration/selection, wraps
-                        AudioObjectGetPropertyData/SetPropertyData directly.
-                        Never touches system-wide default devices.
-    AudioRingBuffer     The lock-free SPSC ring buffer bridging the two engines
-    AudioEngineManager  The whole pipeline: capture engine, playback engine,
-                        graph wiring, plugin lifecycle, presets
+    AudioDeviceManager  Core Audio device enumeration and selection
+    AudioRingBuffer     Lock-free SPSC buffer bridging the two engines
+    AudioEngineManager  Both engines, graph wiring, plugin lifecycle, presets
   Plugins/
-    BaseEffectAudioUnit Shared AUAudioUnit boilerplate (bus setup, render block)
-    DSPUtilities        Biquads, delay lines, envelope followers, unit conversions
-    PreampAU, ToneShaperAU, HaasWidenerAU, StereoImagerAU, PunchCompressorAU
-    PluginRegistry      Registers and instantiates the in-process Audio Units
-  Models/               EQBand, PluginSlot, Preset -- all Codable
-  Views/                SwiftUI: sidebar navigation, EQ, preamp, plugin rack,
-                        device settings, presets, menu bar popover
+    BaseEffectAudioUnit Shared AUAudioUnit boilerplate
+    DSPUtilities        Biquads, delay lines, envelope followers
+    PreampAU, ToneShaperAU, HaasWidenerAU, StereoImagerAU,
+    PunchCompressorAU, MaximizerAU
+    PluginRegistry      Registration and instantiation
+  Models/               EQBand, PluginSlot, Preset, all Codable
+  Views/                SwiftUI: navigation, EQ, plugin rack, devices, presets
 ```
 
-## Known rough edges
+## Limitations
 
-Stereo only — a multichannel input gets down-mixed to two channels by
-`AVAudioEngine`, with no explicit handling beyond that.
+Stereo only. Multichannel input gets downmixed by `AVAudioEngine` with no special handling.
 
-Changing your audio hardware's sample rate while the app is running
-(plugging in a different interface, say) will desync the ring buffer. Stop
-and restart the app after switching hardware, since BlackHole only gets
-pinned to match the microphone's sample rate at Start.
+Changing the sample rate while running desyncs the ring buffer. BlackHole is pinned to the microphone's rate at Start, so restart after switching hardware.
 
-Bluetooth input devices can register as more than one Core Audio device
-object for different profiles, which occasionally makes device selection
-behave oddly. Built-in or wired mics don't have this problem.
+Bluetooth inputs sometimes register as several Core Audio device objects for different profiles, which makes selection unreliable.
 
-There's a single post-processing peak meter and nothing more detailed than
-that.
-
-No hosting of real third-party AU or VST plugins, as covered above.
+There is one post-processing peak meter and nothing more detailed.
